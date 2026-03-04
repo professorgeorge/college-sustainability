@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Department Sustainability Dashboard (Integrated SDG Model)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="dark"] {
+            --bg-grad-1: #0f172a;
+            --bg-grad-2: #020617;
+            --panel-bg: rgba(30, 41, 59, 0.6);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-heading: #ffffff;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.4);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #818cf8;
+            --esg-color: #34d399;
+            --input-bg: rgba(15, 23, 42, 0.8);
+            --input-text: #ffffff;
+        }
+
+        :root[data-theme="light"] {
+            --bg-grad-1: #f1f5f9;
+            --bg-grad-2: #e2e8f0;
+            --panel-bg: rgba(255, 255, 255, 0.8);
+            --panel-border: rgba(0, 0, 0, 0.1);
+            --text-main: #1e293b;
+            --text-heading: #0f172a;
+            --text-muted: #475569;
+            --accent: #0284c7;
+            --accent-glow: rgba(2, 132, 199, 0.2);
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --purple: #6366f1;
+            --esg-color: #059669;
+            --input-bg: #ffffff;
+            --input-text: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(150, 150, 150, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(150, 150, 150, 0.5);
+        }
+
+        body {
+            margin: 0;
+            padding: 2rem;
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2));
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 2rem;
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+
+        .header-title h1 {
+            font-size: 2.2rem;
+            margin: 0;
+            background: linear-gradient(to right, var(--accent), var(--esg-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(52, 211, 153, 0.2);
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin: 0.5rem 0 0 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Institutional Header Inputs */
+        .institution-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            padding: 1rem;
+            border-radius: 12px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            max-width: 600px;
+        }
+
+        .institution-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .institution-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed var(--text-muted);
+            color: var(--text-heading);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 0.2rem 0;
+        }
+
+        .institution-input:focus {
+            outline: none;
+            border-bottom-color: var(--accent);
+        }
+
+        .institution-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+            font-weight: 400;
+        }
+
+        .btn-outline,
+        .btn-solid,
+        .btn-icon {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-outline {
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .btn-solid {
+            background: var(--accent);
+            border: 1px solid var(--accent);
+            color: #fff;
+        }
+
+        .btn-solid:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 0 15px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            padding: 0.6rem;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            color: var(--text-heading);
+            border-radius: 50%;
+        }
+
+        .btn-icon:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 500px 1fr;
+            gap: 2rem;
+            flex-grow: 1;
+            height: calc(100vh - 220px);
+        }
+
+        @media (max-width: 1400px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .sidebar {
+                max-height: none !important;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
+        .glass {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+            max-height: 100%;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            margin: 0 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--panel-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title.esg-title {
+            color: var(--esg-color);
+            border-bottom-color: rgba(52, 211, 153, 0.3);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .input-full {
+            grid-column: span 2;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .input-group input[type="number"],
+        .input-group input[type="text"],
+        .input-group select {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            color: var(--input-text);
+            padding: 0.5rem 0.7rem;
+            border-radius: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .input-group.esg-input input:focus,
+        .input-group.esg-input select:focus {
+            border-color: var(--esg-color);
+            box-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
+        }
+
+        .input-group input:focus+label,
+        .input-group select:focus+label {
+            color: var(--accent);
+        }
+
+        .input-group.esg-input input:focus+label,
+        .input-group.esg-input select:focus+label {
+            color: var(--esg-color);
+        }
+
+        .tooltip {
+            font-size: 0.65rem;
+            color: var(--warning);
+            margin-top: 0.2rem;
+            display: block;
+            min-height: 0.8rem;
+        }
+
+        .misc-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        /* Institutional Weighting Slider */
+        .weight-slider-container {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--panel-border);
+        }
+
+        .weight-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .weight-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, var(--accent) var(--fin-pct), var(--esg-color) var(--fin-pct));
+            outline: none;
+            margin: 10px 0;
+        }
+
+        .weight-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--text-muted);
+        }
+
+        .weight-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--text-muted);
+        }
+
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .kpi-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+            transition: transform 0.3s, background 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .kpi-card.esg-card {
+            border-color: rgba(52, 211, 153, 0.4);
+            background: rgba(52, 211, 153, 0.05);
+        }
+
+        .kpi-card.master-card {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(52, 211, 153, 0.15));
+            border-color: var(--accent);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.05);
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.4rem 0;
+            transition: color 0.3s;
+            color: var(--text-heading);
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--panel-border);
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .axis-line {
+            stroke: var(--panel-border);
+            stroke-width: 1;
+        }
+
+        .axis-grid {
+            stroke: var(--text-muted);
+            stroke-width: 1;
+            stroke-dasharray: 4;
+            opacity: 0.2;
+        }
+
+        .axis-text {
+            fill: var(--text-muted);
+            font-size: 11px;
+            font-family: 'Outfit';
+        }
+
+        .advice-panel {
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-left: 4px solid var(--warning);
+            padding: 1.2rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            height: 100%;
+        }
+
+        .advice-panel.esg-advice {
+            background: rgba(52, 211, 153, 0.05);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            border-left-color: var(--esg-color);
+        }
+
+        .advice-panel h3 {
+            margin: 0 0 0.8rem 0;
+            color: var(--warning);
+            font-size: 1rem;
+        }
+
+        .advice-panel.esg-advice h3 {
+            color: var(--esg-color);
+        }
+
+        .advice-panel ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .advice-panel li {
+            margin-bottom: 0.4rem;
+            color: var(--text-main);
+        }
+
+        footer {
+            text-align: center;
+            padding-top: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: text-shadow 0.3s;
+        }
+
+        footer a:hover {
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--bg-grad-1);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 850px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            color: var(--text-main);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .close-btn:hover {
+            color: var(--text-heading);
+        }
+
+        .modal-body h3 {
+            color: var(--purple);
+            margin-top: 1.2rem;
+            font-size: 1.1rem;
+        }
+
+        .modal-body h3.esg-heading {
+            color: var(--esg-color);
+        }
+
+        .modal-body p,
+        .modal-body li {
+            line-height: 1.5;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Print Media Styles for PDF Export */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                display: block;
+                padding: 0;
+            }
+
+            .glass {
+                background: white !important;
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                animation: none !important;
+                page-break-inside: avoid;
+            }
+
+            .dashboard {
+                display: block !important;
+                height: auto !important;
+            }
+
+            .sidebar {
+                max-height: none !important;
+                overflow: visible !important;
+                margin-bottom: 2rem;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+                page-break-after: always;
+            }
+
+            header {
+                padding-bottom: 1rem;
+                border-bottom: 2px solid #000;
+                margin-bottom: 2rem;
+            }
+
+            .header-title h1 {
+                background: none !important;
+                -webkit-text-fill-color: black !important;
+                color: black !important;
+                text-shadow: none !important;
+            }
+
+            .btn-outline,
+            .btn-solid,
+            .btn-icon,
+            .tooltip {
+                display: none !important;
+            }
+
+            .institution-header {
+                max-width: 100%;
+                border: none;
+                padding: 0;
+                background: transparent;
+            }
+
+            .institution-input {
+                font-size: 1.2rem;
+                border: none;
+                color: black;
+                font-weight: bold;
+            }
+
+            .institution-input::placeholder {
+                color: transparent;
+            }
+
+            .input-group input,
+            .input-group select {
+                background: white !important;
+                color: black !important;
+                border: 1px solid #999 !important;
+            }
+
+            .input-group label {
+                color: black !important;
+                font-weight: bold;
+            }
+
+            .section-title {
+                color: black !important;
+                border-bottom: 1px solid #000 !important;
+            }
+
+            .kpi-card {
+                border: 1px solid #000 !important;
+                background: #f9f9f9 !important;
+            }
+
+            .kpi-card * {
+                color: black !important;
+                text-shadow: none !important;
+            }
+
+            .chart-container {
+                background: white !important;
+                border: 1px solid #000 !important;
+            }
+
+            .advice-panel {
+                border: 1px solid #000 !important;
+                background: white !important;
+            }
+
+            .axis-text {
+                fill: black !important;
+            }
+
+            footer {
+                display: block !important;
+                border-top: 1px solid #ccc;
+                margin-top: 2rem;
+                color: black;
+            }
+
+            footer a {
+                color: black !important;
+                text-decoration: underline;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <div class="header-title">
+                <h1>Department Sustainability Report</h1>
+                <p>Integrated Financial & UN SDG Predictive Dashboard for Deans</p>
+            </div>
+
+            <div class="institution-header">
+                <input type="text" class="institution-input" id="inp-inst-name"
+                    placeholder="Enter University / Institution Name"
+                    style="font-size: 1.4rem; font-weight: 700; color: var(--accent);">
+                <div class="institution-row">
+                    <input type="text" class="institution-input" id="inp-college-name"
+                        placeholder="Enter College / School Name">
+                    <input type="text" class="institution-input" id="inp-dept-name" placeholder="Enter Department Name">
+                </div>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <!-- Theme Toggle -->
+            <button class="btn-icon" id="theme-toggle" title="Toggle Light/Dark Mode">
+                <svg id="theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg id="theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+            <button class="btn-outline" id="btn-help">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                Methodology
+            </button>
+            <button class="btn-solid" onclick="window.print()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Save as PDF
+            </button>
+        </div>
+    </header>
+
+    <div class="dashboard">
+        <!-- Sidebar Inputs -->
+        <div class="glass sidebar" id="sidebar">
+
+            <div class="weight-slider-container">
+                <div class="weight-labels">
+                    <span style="color: var(--accent);" id="lbl-fin-weight">Financial Weight: 60%</span>
+                    <span style="color: var(--esg-color);" id="lbl-esg-weight">SDG / Societal Weight: 40%</span>
+                </div>
+                <input type="range" id="inp-weighting" class="weight-slider" min="0" max="100" value="60">
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">
+                    Institution Priority Configuration (Defines the Final Sustainability Formula)
+                </div>
+            </div>
+
+            <div>
+                <h3 class="section-title">Core & Ancillary Revenue ($)</h3>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>Undergraduates</label>
+                        <input type="number" id="inp-ug-students" placeholder="e.g. 400">
+                        <span class="tooltip" id="tip-ug-students"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Avg UG Net Tuition</label>
+                        <input type="number" id="inp-ug-tuition" placeholder="e.g. 15000">
+                        <span class="tooltip" id="tip-ug-tuition"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Grad Students</label>
+                        <input type="number" id="inp-grad-students" placeholder="e.g. 100">
+                        <span class="tooltip" id="tip-grad-students"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Avg Grad Tuition</label>
+                        <input type="number" id="inp-grad-tuition" placeholder="e.g. 20000">
+                        <span class="tooltip" id="tip-grad-tuition"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Non-Degree/Exec Ed</label>
+                        <input type="number" id="inp-nondeg" placeholder="Annual Rev">
+                        <span class="tooltip" id="tip-nondeg"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Sponsored Grants</label>
+                        <input type="number" id="inp-grants" placeholder="Annual Rev">
+                        <span class="tooltip" id="tip-grants"></span>
+                    </div>
+                    <div class="input-full">
+                        <div class="input-group">
+                            <label>Misc. Revenue</label>
+                            <div class="misc-container">
+                                <input type="number" id="inp-misc-rev" placeholder="Total Amount">
+                                <input type="text" id="inp-misc-rev-desc" placeholder="Details (e.g. Endowments)">
+                            </div>
+                            <span class="tooltip" id="tip-misc-rev"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="section-title">Personnel Overhead ($)</h3>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>FT Faculty (FTE)</label>
+                        <input type="number" id="inp-ft-faculty" placeholder="Full-Time Count">
+                        <span class="tooltip" id="tip-ft-faculty"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Avg FT Salary</label>
+                        <input type="number" id="inp-ft-salary" placeholder="e.g. 90000">
+                        <span class="tooltip" id="tip-ft-salary"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>PT/Adjuncts (Count)</label>
+                        <input type="number" id="inp-pt-faculty" placeholder="Part-Time Count">
+                        <span class="tooltip" id="tip-pt-faculty"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Avg PT Pay/Year</label>
+                        <input type="number" id="inp-pt-salary" placeholder="e.g. 25000">
+                        <span class="tooltip" id="tip-pt-salary"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Admin Staff (FTE)</label>
+                        <input type="number" id="inp-staff" placeholder="Staff Count">
+                        <span class="tooltip" id="tip-staff"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Avg Staff Salary</label>
+                        <input type="number" id="inp-staff-salary" placeholder="e.g. 55000">
+                        <span class="tooltip" id="tip-staff-salary"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="section-title">Operations & Drivers</h3>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>General Ops Exp ($)</label>
+                        <input type="number" id="inp-ops" placeholder="Travel, supplies..">
+                        <span class="tooltip" id="tip-ops"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Facilities/Capital ($)</label>
+                        <input type="number" id="inp-cap" placeholder="IT, Lab Refresh..">
+                        <span class="tooltip" id="tip-cap"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Central Tax/Overhead (%)</label>
+                        <input type="number" id="inp-tax-rate" placeholder="e.g. 15">
+                        <span class="tooltip" id="tip-tax-rate"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>Student Retention (%)</label>
+                        <input type="number" id="inp-retention" placeholder="e.g. 80">
+                        <span class="tooltip" id="tip-retention"></span>
+                    </div>
+                    <div class="input-full">
+                        <div class="input-group">
+                            <label>Misc. Expenses ($)</label>
+                            <div class="misc-container">
+                                <input type="number" id="inp-misc-exp" placeholder="Total Amount">
+                                <input type="text" id="inp-misc-exp-desc" placeholder="Details (e.g. Software)">
+                            </div>
+                            <span class="tooltip" id="tip-misc-exp"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="section-title esg-title">UN SDG Alignment (Higher Ed)</h3>
+                <div class="input-grid">
+                    <div class="input-group esg-input input-full">
+                        <label>SDG 4: Quality & Inclusive Ed (Access Score 0-100)</label>
+                        <input type="number" id="inp-esg-sdg4"
+                            placeholder="% Pell-Eligible / First Gen / Underrepresented">
+                        <span class="tooltip" id="tip-esg-sdg4"></span>
+                    </div>
+                    <div class="input-group esg-input">
+                        <label>SDG 8: Local Econ Impact</label>
+                        <input type="number" id="inp-esg-sdg8" placeholder="Pro-bono/Service Hrs">
+                        <span class="tooltip" id="tip-esg-sdg8"></span>
+                    </div>
+                    <div class="input-group esg-input">
+                        <label>SDG 9: Innovation</label>
+                        <input type="number" id="inp-esg-sdg9" placeholder="Annual Pubs / Patents">
+                        <span class="tooltip" id="tip-esg-sdg9"></span>
+                    </div>
+                    <div class="input-group esg-input input-full">
+                        <label>SDG 13: Climate Action Rating</label>
+                        <select id="inp-esg-sdg13">
+                            <option value="1">Laggard (Heavy footprint, zero mitigation)</option>
+                            <option value="2" selected>Standard (Compliant with campus baselines)</option>
+                            <option value="3">Leader (Active net-zero integration in curriculum/ops)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Main Content -->
+        <div class="glass results">
+            <div class="kpi-container">
+                <div class="kpi-card master-card">
+                    <div class="kpi-label">Master Sustainability Index</div>
+                    <div class="kpi-value" id="kpi-score" style="text-shadow: 0 0 10px rgba(0,0,0,0.1);">--</div>
+                    <div style="font-size: 0.75rem; color: var(--text-heading); opacity: 0.8;" id="kpi-score-lbl">
+                        Blended Ratio</div>
+                </div>
+                <div class="kpi-card esg-card">
+                    <div class="kpi-label" style="color: var(--esg-color);">UN SDG Impact Rating</div>
+                    <div class="kpi-value" id="kpi-esg" style="color: var(--esg-color);">--</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Institutional Value (100)</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Current Net Margin</div>
+                    <div class="kpi-value" id="kpi-margin">--</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Direct Financial Return</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">5-Year Margin Trend</div>
+                    <div class="kpi-value" id="kpi-trend">--</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Trajectory Modeling</div>
+                </div>
+            </div>
+
+            <div style="flex-grow: 1;">
+                <h3
+                    style="margin-top: 0; font-weight: 500; font-size: 1.1rem; display: flex; justify-content: space-between;">
+                    <span>5-Year Forecast: Cashflow vs Fully Loaded Operating Costs</span>
+                    <span id="kpi-revenue" style="color: var(--accent);">-- / yr</span>
+                </h3>
+                <div class="chart-container">
+                    <svg id="chartSvg" viewBox="0 0 800 250" preserveAspectRatio="none">
+                        <!-- Rendered by JS -->
+                    </svg>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="advice-panel">
+                    <h3>Financial & Market Diagnostics</h3>
+                    <ul id="advice-list-fin">
+                        <li>Enter parameters for financial insights.</li>
+                    </ul>
+                </div>
+                <div class="advice-panel esg-advice">
+                    <h3>Societal Return & SDG Alignment</h3>
+                    <ul id="advice-list-esg">
+                        <li>Enter parameters to map UN SDG congruence.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <footer style="padding-top: 0.5rem;">
+                <p style="margin-bottom: 0.2rem;">Predictive model built for comprehensive academic department
+                    valuation.</p>
+                <p>Designed and developed by <a href="https://www.linkedin.com/in/beingbabu/" target="_blank">Dr. Babu
+                        George</a>.</p>
+            </footer>
+        </div>
+    </div>
+
+
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="help-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Methodology: Integrated SDG & Finance Model</h2>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>This predictive dashboard bridges <strong>fully-burdened structural finance</strong> with global
+                    best-practices in <strong>UN Sustainable Development Goal (SDG) tracking</strong>. The model is
+                    scientifically underpinned by two primary theoretical frameworks:</p>
+
+                <h3>1. Activity-Based Costing (ABC) in Higher Education</h3>
+                <p>Traditional university accounting often obscures the true cost of operating a department by lumping
+                    indirect costs into general institutional overhead. This tool employs principles of Activity-Based
+                    Costing by assigning fully loaded operating costs—including direct personnel encumbrances,
+                    program-specific facilities, and a calculated 'Central Tax'—directly against the revenue generated
+                    by the unit. This mathematically exposes cross-subsidization and reveals the true localized margin.
+                </p>
+
+                <h3>2. Triple Bottom Line (TBL) Accounting</h3>
+                <p>A university's performance cannot be evaluated purely on a corporate P&L construct. We adapt the
+                    Triple Bottom Line framework (Profit, People, Planet) into a dual-axis scoring indicator combining
+                    the Financial Margin (Profit) with the UN SDG Impact Rating (People & Planet). The dynamic
+                    institutional slider allows universities to define their unique TBL weighting.</p>
+
+                <h3 class="esg-heading">SDG Alignment Metrics for Higher Ed</h3>
+                <p>The Societal Return on Investment (SROI) is quantified via specific SDG proxies mapping to university
+                    operations:</p>
+                <ul>
+                    <li><strong>SDG 4 (Quality & Inclusive Education):</strong> Translates to access. Evaluates the
+                        percentage of the student body that is first-generation, Pell-eligible, or historically
+                        underrepresented (scored 0-100).</li>
+                    <li><strong>SDG 8 (Decent Work & Econ Growth):</strong> Translates to direct local engagement.
+                        Evaluates community service, pro-bono consulting, and local workforce upskilling hours generated
+                        by the department.</li>
+                    <li><strong>SDG 9 (Innovation):</strong> Evaluates knowledge transfer. Tracks the quantity of Open
+                        Access publications, patents, or direct policy briefs distributed annually.</li>
+                    <li><strong>SDG 13 (Climate Action):</strong> Penalizes departments operating heavily
+                        carbon-intensive legacy footprints without proactive curriculum or operational mitigation.</li>
+                </ul>
+
+                <h3>Algorithmic Logic & Estimation Protocol</h3>
+                <p>To reduce initial data-entry friction, omitted fields leverage standardized predictive algorithms
+                    based on higher ed heuristics:</p>
+                <ul>
+                    <li><strong>Compounding Attrition:</strong> The 5-year projection is not static. A dynamic drop-out
+                        rate (calculated as <code>100 - Retention%</code>) is explicitly subtracted year-over-year,
+                        alongside a standard graduation cohort exit, to accurately model future tuition bases over a
+                        60-month horizon.</li>
+                    <li><strong>Inflationary Multipliers:</strong> The automated projection applies a baseline 2%
+                        enrollment growth alongside a 3% compounding inflationary rate to both tuition yield and salary
+                        expenditures to simulate realistic fiscal drag and market conditions.</li>
+                    <li><strong>Heuristics:</strong> If personnel inputs are left blank, the system assumes an optimal
+                        1:20 Full-Time Faculty-to-Student ratio, and standard campus climate compliance baselines.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements mapping
+        const els = {
+            // Finance
+            ugStudents: document.getElementById('inp-ug-students'),
+            ugTuition: document.getElementById('inp-ug-tuition'),
+            gradStudents: document.getElementById('inp-grad-students'),
+            gradTuition: document.getElementById('inp-grad-tuition'),
+            nondeg: document.getElementById('inp-nondeg'),
+            grants: document.getElementById('inp-grants'),
+            miscRev: document.getElementById('inp-misc-rev'),
+            miscRevDesc: document.getElementById('inp-misc-rev-desc'),
+
+            ftFaculty: document.getElementById('inp-ft-faculty'),
+            ftSalary: document.getElementById('inp-ft-salary'),
+            ptFaculty: document.getElementById('inp-pt-faculty'),
+            ptSalary: document.getElementById('inp-pt-salary'),
+            staff: document.getElementById('inp-staff'),
+            staffSalary: document.getElementById('inp-staff-salary'),
+
+            ops: document.getElementById('inp-ops'),
+            cap: document.getElementById('inp-cap'),
+            taxRate: document.getElementById('inp-tax-rate'),
+            miscExp: document.getElementById('inp-misc-exp'),
+            miscExpDesc: document.getElementById('inp-misc-exp-desc'),
+
+            // Drivers
+            retention: document.getElementById('inp-retention'),
+
+            // SDG
+            sdg4: document.getElementById('inp-esg-sdg4'),
+            sdg8: document.getElementById('inp-esg-sdg8'),
+            sdg9: document.getElementById('inp-esg-sdg9'),
+            sdg13: document.getElementById('inp-esg-sdg13'),
+
+            // Priority
+            weighting: document.getElementById('inp-weighting')
+        };
+
+        const tips = {};
+        Object.keys(els).forEach(key => {
+            if (els[key] && els[key].id) {
+                let tipEl = document.getElementById(`tip-${els[key].id.substring(4)}`);
+                if (tipEl) tips[key] = tipEl;
+            }
+        });
+
+        const kpis = {
+            score: document.getElementById('kpi-score'),
+            scoreLbl: document.getElementById('kpi-score-lbl'),
+            esg: document.getElementById('kpi-esg'),
+            margin: document.getElementById('kpi-margin'),
+            trend: document.getElementById('kpi-trend'),
+            revenue: document.getElementById('kpi-revenue')
+        };
+        const adviceListFin = document.getElementById('advice-list-fin');
+        const adviceListEsg = document.getElementById('advice-list-esg');
+        const chartSvg = document.getElementById('chartSvg');
+        const sidebar = document.getElementById('sidebar');
+
+        const lblFinWeight = document.getElementById('lbl-fin-weight');
+        const lblEsgWeight = document.getElementById('lbl-esg-weight');
+
+        // Modal Logic
+        const btnHelp = document.getElementById('btn-help');
+        const modal = document.getElementById('help-modal');
+        const closeModal = document.getElementById('close-modal');
+
+        btnHelp.addEventListener('click', () => modal.classList.add('active'));
+        closeModal.addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const iconMoon = document.getElementById('theme-icon-moon');
+        const iconSun = document.getElementById('theme-icon-sun');
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                iconSun.style.display = 'none';
+                iconMoon.style.display = 'block';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                iconMoon.style.display = 'none';
+                iconSun.style.display = 'block';
+            }
+            // Redraw chart to update axis colors
+            calculateModel();
+        });
+
+        // Slider Logic
+        els.weighting.addEventListener('input', (e) => {
+            let finW = e.target.value;
+            let esgW = 100 - finW;
+            lblFinWeight.innerText = `Financial Weight: ${finW}%`;
+            lblEsgWeight.innerText = `SDG / Societal Weight: ${esgW}%`;
+            e.target.style.setProperty('--fin-pct', finW + '%');
+            calculateModel();
+        });
+        els.weighting.style.setProperty('--fin-pct', els.weighting.value + '%');
+
+        // Estimation Defaults
+        const DEFAULTS = {
+            ugTuition: 15000, gradTuition: 20000,
+            ftSalary: 90000, ptSalary: 25000, staffSalary: 55000,
+            opsPerStudent: 1500, capPerStudent: 500, taxRate: 15,
+            ratioStudentFT: 20, ratioFTPT: 0.5, ratioFTStaff: 0.3,
+            retention: 80,
+            sdg4: 40, sdg8: 1000, sdg9: 10
+        };
+
+        function formatCurrency(num) {
+            if (num >= 1000000) return '$' + (num / 1000000).toFixed(2) + 'M';
+            if (num >= 1000) return '$' + (num / 1000).toFixed(0) + 'k';
+            return '$' + Math.round(num);
+        }
+
+        function extractVal(inputEl, tipEl, defaultVal, isEstMsg, advicesArr, metricName) {
+            if (!inputEl || !tipEl) return defaultVal;
+            let val = parseFloat(inputEl.value);
+            if (isNaN(val)) {
+                tipEl.innerText = `Est: ${isEstMsg || defaultVal}`;
+                if (metricName) advicesArr.push(`Estimated <strong>${metricName}</strong> heuristic applied.`);
+                return defaultVal;
+            } else {
+                tipEl.innerText = "";
+                return val;
+            }
+        }
+
+        function calculateModel() {
+            let d = {};
+            let advFin = [];
+            let advEsg = [];
+
+            // --- FINANCE ---
+            let parsedUG = parseFloat(els.ugStudents.value);
+            d.ugStudents = isNaN(parsedUG) ? 500 : parsedUG;
+            if (isNaN(parsedUG)) els.ugStudents.value = 500;
+
+            d.gradStudents = extractVal(els.gradStudents, tips.gradStudents, 0, "0", advFin, null);
+            let totalStudents = d.ugStudents + d.gradStudents;
+
+            d.ugTuition = extractVal(els.ugTuition, tips.ugTuition, DEFAULTS.ugTuition, formatCurrency(DEFAULTS.ugTuition), advFin, "UG Yield");
+            d.gradTuition = extractVal(els.gradTuition, tips.gradTuition, DEFAULTS.gradTuition, formatCurrency(DEFAULTS.gradTuition), advFin, null);
+
+            d.nondeg = extractVal(els.nondeg, tips.nondeg, 0, "$0", advFin, null);
+            d.grants = extractVal(els.grants, tips.grants, 0, "$0", advFin, null);
+            d.miscRev = extractVal(els.miscRev, tips.miscRev, 0, "$0", advFin, null);
+
+            let estFT = Math.max(1, Math.round(totalStudents / DEFAULTS.ratioStudentFT));
+            d.ftFaculty = extractVal(els.ftFaculty, tips.ftFaculty, estFT, `Ratio 1:${DEFAULTS.ratioStudentFT}`, advFin, "FT Faculty");
+            d.ftSalary = extractVal(els.ftSalary, tips.ftSalary, DEFAULTS.ftSalary, formatCurrency(DEFAULTS.ftSalary), advFin, null);
+
+            let estPT = Math.round(d.ftFaculty * DEFAULTS.ratioFTPT);
+            d.ptFaculty = extractVal(els.ptFaculty, tips.ptFaculty, estPT, `${estPT}`, advFin, null);
+            d.ptSalary = extractVal(els.ptSalary, tips.ptSalary, DEFAULTS.ptSalary, formatCurrency(DEFAULTS.ptSalary), advFin, null);
+
+            let estStaff = Math.max(1, Math.round(d.ftFaculty * DEFAULTS.ratioFTStaff));
+            d.staff = extractVal(els.staff, tips.staff, estStaff, `${estStaff}`, advFin, null);
+            d.staffSalary = extractVal(els.staffSalary, tips.staffSalary, DEFAULTS.staffSalary, formatCurrency(DEFAULTS.staffSalary), advFin, null);
+
+            let estOps = totalStudents * DEFAULTS.opsPerStudent;
+            d.ops = extractVal(els.ops, tips.ops, estOps, formatCurrency(estOps), advFin, "OpEx");
+            let estCap = totalStudents * DEFAULTS.capPerStudent;
+            d.cap = extractVal(els.cap, tips.cap, estCap, formatCurrency(estCap), advFin, null);
+            d.taxRate = extractVal(els.taxRate, tips.taxRate, DEFAULTS.taxRate, `${DEFAULTS.taxRate}%`, advFin, null);
+            d.miscExp = extractVal(els.miscExp, tips.miscExp, 0, "$0", advFin, null);
+            d.retention = extractVal(els.retention, tips.retention, DEFAULTS.retention, `${DEFAULTS.retention}%`, advFin, null);
+
+            let enrollGrowth = 1.02; // 2% 
+            let inflation = 1.03; // 3%
+            let tuitionIncr = 1.03; // 3%
+
+            // --- UN SDG METRICS ---
+            d.sdg4 = extractVal(els.sdg4, tips.sdg4, DEFAULTS.sdg4, `${DEFAULTS.sdg4} Score`, advEsg, "SDG 4 Access baseline");
+            d.sdg8 = extractVal(els.sdg8, tips.sdg8, DEFAULTS.sdg8, `${DEFAULTS.sdg8} Hrs`, advEsg, "SDG 8 Service baseline");
+            d.sdg9 = extractVal(els.sdg9, tips.sdg9, DEFAULTS.sdg9, `${DEFAULTS.sdg9} Pubs`, advEsg, null);
+            d.sdg13 = parseInt(els.sdg13.value);
+
+            let sc4 = Math.min(30, (d.sdg4 / 100) * 30);
+            let sc8 = Math.min(25, (d.sdg8 / 5000) * 25);
+            let sc9 = Math.min(25, (d.sdg9 / 50) * 25);
+            let sc13 = d.sdg13 === 1 ? 0 : (d.sdg13 === 2 ? 10 : 20);
+
+            let finalEsgScore = Math.max(0, Math.min(100, Math.round(sc4 + sc8 + sc9 + sc13)));
+            kpis.esg.innerText = finalEsgScore;
+
+            if (d.sdg4 < 30) advEsg.push("<strong>SDG 4 Risk (Access):</strong> Low representation of Pell-eligible or First-Gen students reduces departmental mandate for societal mobility. Impacts systemic equity.");
+            if (d.sdg8 > 2000) advEsg.push("<strong>SDG 8 Strength (Econ Growth):</strong> High direct engagement hours forge an 'invisible endowment' of public goodwill and political safety in the local economy.");
+            if (d.sdg9 > 30) advEsg.push("<strong>SDG 9 Strength (Innovation):</strong> Robust knowledge transfer pipeline (open access/patents) validates the department as a core research engine.");
+            if (d.sdg13 === 1) advEsg.push("<strong>SDG 13 Risk (Climate Action):</strong> Legacy structural footprint without curriculum mitigation violates emerging global academic standards.");
+
+            // --- FINANCE SIMULATION ---
+            let currUG = d.ugStudents; let currGrad = d.gradStudents;
+            let currUGTuition = d.ugTuition; let currGradTuition = d.gradTuition;
+            let currMiscRev = d.miscRev;
+
+            let currFTSal = d.ftSalary; let currPTSal = d.ptSalary; let currStaffSal = d.staffSalary;
+            let currOps = d.ops; let currCap = d.cap; let currMiscExp = d.miscExp;
+
+            let projection = [];
+
+            for (let year = 0; year <= 5; year++) {
+                let directTuitionRev = (currUG * currUGTuition) + (currGrad * currGradTuition);
+                let auxiliaryRev = d.nondeg + d.grants + currMiscRev;
+                let rev = directTuitionRev + auxiliaryRev;
+
+                let personnelCost = (d.ftFaculty * currFTSal) + (d.ptFaculty * currPTSal) + (d.staff * currStaffSal);
+                let hardCosts = currOps + currCap + currMiscExp;
+                let taxBurden = directTuitionRev * (d.taxRate / 100);
+
+                let cost = personnelCost + hardCosts + taxBurden;
+                let net = rev - cost;
+                let margin = rev > 0 ? (net / rev) * 100 : 0;
+
+                projection.push({ year, rev, cost, net, margin });
+
+                // Advance state 
+                let dropRate = 1 - (d.retention / 100);
+                let intakeUG = d.ugStudents * 0.25 * enrollGrowth;
+                currUG = currUG - (currUG * 0.25) - (currUG * dropRate) + intakeUG;
+
+                let intakeGrad = d.gradStudents * 0.5 * enrollGrowth;
+                currGrad = currGrad - (currGrad * 0.5) - (currGrad * dropRate) + intakeGrad;
+
+                // Inflate 
+                currUGTuition *= tuitionIncr; currGradTuition *= tuitionIncr;
+                currMiscRev *= inflation; currMiscExp *= inflation;
+                currFTSal *= inflation; currPTSal *= inflation; currStaffSal *= inflation;
+                currOps *= inflation; currCap *= inflation;
+            }
+
+            // Weighting
+            let finW = parseInt(els.weighting.value) / 100;
+            let esgW = 1 - finW;
+
+            renderView(projection, advFin, advEsg, d, finalEsgScore, finW, esgW);
+        }
+
+        function renderView(proj, advFin, advEsg, d, esgScore, finW, esgW) {
+            let m0 = proj[0].margin; let m5 = proj[5].margin;
+
+            kpis.margin.innerText = m0.toFixed(1) + "%";
+            kpis.margin.style.color = m0 > 5 ? "var(--success)" : (m0 > -2 ? "var(--warning)" : "var(--danger)");
+
+            let trendOffset = m5 - m0;
+            kpis.trend.innerText = m5.toFixed(1) + "%";
+            kpis.trend.style.color = trendOffset > 0 ? "var(--success)" : "var(--danger)";
+
+            kpis.revenue.innerText = "Y1 Focus: " + formatCurrency(proj[0].rev);
+
+            // Blended index calculation
+            let avgMargin = proj.reduce((s, p) => s + p.margin, 0) / 6;
+            let finScoreRaw = 50 + (avgMargin * 3) + (trendOffset > 0 ? trendOffset * 2 : trendOffset * 3);
+            let finScore = Math.max(0, Math.min(100, finScoreRaw));
+
+            let holisticScore = Math.round((finScore * finW) + (esgScore * esgW));
+
+            kpis.score.innerText = holisticScore;
+            kpis.scoreLbl.innerText = `Blended Ratio (${Math.round(finW * 100)}/${Math.round(esgW * 100)})`;
+
+            // Intelligent Finance Insights
+            let intelFin = [];
+
+            if (els.miscRev.value && parseFloat(els.miscRev.value) > 0) {
+                let desc = els.miscRevDesc.value || "Custom Income";
+                intelFin.push(`Acknowledged <strong>${desc}</strong> flowing into auxiliary revenue.`);
+            }
+            if (els.miscExp.value && parseFloat(els.miscExp.value) > 0) {
+                let desc = els.miscExpDesc.value || "Custom Expense";
+                intelFin.push(`Factored in <strong>${desc}</strong> as a recurring hard cost.`);
+            }
+
+            if (m0 < 0 && holisticScore > 70) {
+                intelFin.push("<strong>Strategic Loss-Leader:</strong> Department has a negative margin, but high SDG congruence offsets purely financial metrics. Maintain UN positioning to secure structural Provost funding.");
+            } else if (m0 < 0) {
+                intelFin.push("<strong>Vulnerability:</strong> Deficit structure is not protected by sufficient SDG/Societal value generation. Division requires immediate programmatic restructuring.");
+            }
+
+            if (d.retention < 75) intelFin.push("<strong>Compounding Risk:</strong> Retention rates < 75% actively destroy net revenue accumulation over the 5-year cycle.");
+
+            advFin = intelFin.concat(advFin.slice(0, 1));
+            if (advFin.length === 0) advFin.push("Fiscal equilibrium attained.");
+            adviceListFin.innerHTML = advFin.map(a => `<li>${a}</li>`).join('');
+
+            if (advEsg.length === 0) advEsg.push("Baseline SDG metrics captured. Recommend deepening societal alignment.");
+            adviceListEsg.innerHTML = advEsg.map(a => `<li>${a}</li>`).join('');
+
+            drawSVG(proj);
+        }
+
+        function drawSVG(proj) {
+            const pad = 40; const padRight = 70;
+            const w = 800; const h = 250;
+
+            let maxDollar = Math.max(...proj.map(p => Math.max(p.rev, p.cost))) * 1.1;
+            maxDollar = maxDollar === 0 ? 10 : maxDollar;
+
+            let html = `
+                <line x1="${pad}" y1="${h - pad}" x2="${w - padRight + 20}" y2="${h - pad}" class="axis-line" />
+                <line x1="${pad}" y1="${pad / 2}" x2="${pad}" y2="${h - pad}" class="axis-line" />
+            `;
+
+            for (let i = 0; i <= 4; i++) {
+                let yPos = (h - pad) - (i / 4) * (h - pad * 1.5);
+                let val = formatCurrency((maxDollar * i) / 4);
+                if (val.endsWith('000') && !val.includes('M')) val = val.replace(/000$/, 'k');
+                html += `<text x="${pad - 5}" y="${yPos + 4}" class="axis-text" text-anchor="end">${val}</text>`;
+                html += `<line x1="${pad}" y1="${yPos}" x2="${w - padRight + 20}" y2="${yPos}" class="axis-grid" />`;
+            }
+
+            let revP = []; let costP = [];
+            let xStep = (w - pad - padRight) / 5;
+
+            // Get CSS variable for accent and danger per theme
+            const computedStyle = getComputedStyle(document.documentElement);
+            const accentColor = computedStyle.getPropertyValue('--accent').trim() || '#38bdf8';
+            const dangerColor = computedStyle.getPropertyValue('--danger').trim() || '#ef4444';
+
+            proj.forEach((p, i) => {
+                let x = pad + (i * xStep);
+                let yR = (h - pad) - ((p.rev / maxDollar) * (h - pad * 1.5));
+                let yC = (h - pad) - ((p.cost / maxDollar) * (h - pad * 1.5));
+
+                revP.push(`${x},${yR}`);
+                costP.push(`${x},${yC}`);
+
+                html += `<text x="${x}" y="${h - pad + 20}" class="axis-text" text-anchor="middle">Year ${i}</text>`;
+                html += `<circle cx="${x}" cy="${yR}" r="4" fill="${accentColor}" />`;
+                html += `<circle cx="${x}" cy="${yC}" r="4" fill="${dangerColor}" />`;
+            });
+
+            html += `<path d="M ${revP.join(' L ')}" class="chart-line" stroke="${accentColor}" />`;
+            html += `<path d="M ${costP.join(' L ')}" class="chart-line" stroke="${dangerColor}" />`;
+
+            html += `
+                <rect x="${w - 85}" y="20" width="10" height="10" rx="2" fill="${accentColor}" />
+                <text x="${w - 68}" y="29" class="axis-text">Revenue</text>
+                <rect x="${w - 85}" y="40" width="10" height="10" rx="2" fill="${dangerColor}" />
+                <text x="${w - 68}" y="49" class="axis-text">Total Cost</text>
+            `;
+
+            chartSvg.innerHTML = html;
+        }
+
+        // Initialize listeners
+        sidebar.addEventListener('input', calculateModel);
+
+        // Final Init Boot
+        calculateModel(); 
+    </script>
+</body>
+
+</html>

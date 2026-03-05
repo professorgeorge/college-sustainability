@@ -1295,9 +1295,7 @@
             let advEsg = [];
 
             // --- FINANCE ---
-            let parsedUG = parseFloat(els.ugStudents.value);
-            d.ugStudents = isNaN(parsedUG) ? 500 : parsedUG;
-            if (isNaN(parsedUG)) els.ugStudents.value = 500;
+            d.ugStudents = extractVal(els.ugStudents, tips.ugStudents, 0, "0", advFin, null);
 
             d.gradStudents = extractVal(els.gradStudents, tips.gradStudents, 0, "0", advFin, null);
             let totalStudents = d.ugStudents + d.gradStudents;

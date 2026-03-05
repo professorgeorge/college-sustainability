@@ -398,6 +398,46 @@
             overflow-y: auto;
         }
 
+        /* KPI Legend Styles */
+        .kpi-legend {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: 0.8rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            margin-bottom: -0.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-muted);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.success {
+            background: var(--success);
+        }
+
+        .legend-dot.warning {
+            background: var(--warning);
+        }
+
+        .legend-dot.danger {
+            background: var(--danger);
+            box-shadow: 0 0 5px rgba(239, 68, 68, 0.4);
+        }
+
         .kpi-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1009,6 +1049,18 @@
 
         <!-- Main Content -->
         <div class="glass results">
+            <div class="kpi-legend">
+                <div class="legend-item">
+                    <div class="legend-dot success"></div> <span>Healthy / Sustainable</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot warning"></div> <span>Caution / Approaching Threshold</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot danger"></div> <span>Critical Risk / Unsustainable</span>
+                </div>
+            </div>
+
             <div class="kpi-container">
                 <div class="kpi-card master-card"
                     title="A weighted blend of the 5-Year Financial Margin and the UN SDG Impact Rating, representing the overall viability and societal impact of the department.">
@@ -1344,6 +1396,7 @@
 
             let finalEsgScore = Math.max(0, Math.min(100, Math.round(sc4 + sc8 + sc9 + sc13)));
             kpis.esg.innerText = finalEsgScore;
+            kpis.esg.style.color = finalEsgScore > 65 ? "var(--success)" : (finalEsgScore > 40 ? "var(--warning)" : "var(--danger)");
 
             if (d.sdg4 < 30) advEsg.push("<strong>SDG 4 Risk (Access):</strong> Low representation of Pell-eligible or First-Gen students reduces departmental mandate for societal mobility. Impacts systemic equity.");
             if (d.sdg8 > 2000) advEsg.push("<strong>SDG 8 Strength (Econ Growth):</strong> High direct engagement hours forge an 'invisible endowment' of public goodwill and political safety in the local economy.");
@@ -1417,6 +1470,7 @@
             let holisticScore = Math.round((finScore * finW) + (esgScore * esgW));
 
             kpis.score.innerText = holisticScore;
+            kpis.score.style.color = holisticScore > 75 ? "var(--success)" : (holisticScore > 50 ? "var(--warning)" : "var(--danger)");
             kpis.scoreLbl.innerText = `Blended Ratio (${Math.round(finW * 100)}/${Math.round(esgW * 100)})`;
 
             // New Custom KPI Logic

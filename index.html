@@ -785,8 +785,8 @@
     <header>
         <div>
             <div class="header-title">
-                <h1>Department Sustainability Report</h1>
-                <p>Integrated Financial & UN SDG Predictive Dashboard for Deans</p>
+                <h1>Department Sustainability Dashboard</h1>
+                <p>Integrated Financial & UN SDG Predictive Dashboard for Academic Unit Heads</p>
             </div>
 
             <div class="institution-header">
@@ -1010,33 +1010,50 @@
         <!-- Main Content -->
         <div class="glass results">
             <div class="kpi-container">
-                <div class="kpi-card master-card">
-                    <div class="kpi-label">Master Sustainability Index</div>
+                <div class="kpi-card master-card"
+                    title="A weighted blend of the 5-Year Financial Margin and the UN SDG Impact Rating, representing the overall viability and societal impact of the department.">
+                    <div class="kpi-label">Master Sustainability Index <span style="cursor:help;">ⓘ</span></div>
                     <div class="kpi-value" id="kpi-score" style="text-shadow: 0 0 10px rgba(0,0,0,0.1);">--</div>
                     <div style="font-size: 0.75rem; color: var(--text-heading); opacity: 0.8;" id="kpi-score-lbl">
                         Blended Ratio</div>
                 </div>
-                <div class="kpi-card esg-card">
-                    <div class="kpi-label" style="color: var(--esg-color);">UN SDG Impact Rating</div>
+                <div class="kpi-card esg-card"
+                    title="Quantifies Societal Return on Investment (SROI) across UN goals: Access (SDG4), Economic Impact (SDG8), Innovation (SDG9), and Climate (SDG13).">
+                    <div class="kpi-label" style="color: var(--esg-color);">UN SDG Impact Rating <span
+                            style="cursor:help;">ⓘ</span></div>
                     <div class="kpi-value" id="kpi-esg" style="color: var(--esg-color);">--</div>
                     <div style="font-size: 0.75rem; color: var(--text-muted);">Institutional Value (100)</div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Current Net Margin</div>
+                <div class="kpi-card"
+                    title="The immediate Year 1 operating margin (Revenue minus Fully Loaded Costs / Revenue). Includes personnel, facilities, and central tax.">
+                    <div class="kpi-label">Current Net Margin <span style="cursor:help;">ⓘ</span></div>
                     <div class="kpi-value" id="kpi-margin">--</div>
                     <div style="font-size: 0.75rem; color: var(--text-muted);">Direct Financial Return</div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">5-Year Margin Trend</div>
+                <div class="kpi-card"
+                    title="The mathematical difference between the Year 5 predicted margin and the Current Year 1 margin, showing overall financial trajectory.">
+                    <div class="kpi-label">5-Year Margin Trend <span style="cursor:help;">ⓘ</span></div>
                     <div class="kpi-value" id="kpi-trend">--</div>
                     <div style="font-size: 0.75rem; color: var(--text-muted);">Trajectory Modeling</div>
+                </div>
+                <div class="kpi-card"
+                    title="The ratio of total enrolled students to Full-Time equivalent faculty. A critical metric for pedagogical efficiency, accreditation, and instructional cost.">
+                    <div class="kpi-label">Student:Faculty Ratio <span style="cursor:help;">ⓘ</span></div>
+                    <div class="kpi-value" id="kpi-sfratio">--</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Instructional Efficiency</div>
+                </div>
+                <div class="kpi-card"
+                    title="The percentage of your total revenue derived explicitly from student tuition. Higher dependency indicates higher market vulnerability and lower revenue diversification.">
+                    <div class="kpi-label">Tuition Dependency <span style="cursor:help;">ⓘ</span></div>
+                    <div class="kpi-value" id="kpi-tuition-dep">--</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Revenue Concentration</div>
                 </div>
             </div>
 
             <div style="flex-grow: 1;">
-                <h3
-                    style="margin-top: 0; font-weight: 500; font-size: 1.1rem; display: flex; justify-content: space-between;">
-                    <span>5-Year Forecast: Cashflow vs Fully Loaded Operating Costs</span>
+                <h3 title="This graph projects financial viability over 60 months. It dynamically factors in your current attrition rate, models a 2% enrollment growth on remaining students, and applies a 3% compounding inflation rate to tuition yield and salary expenditures."
+                    style="margin-top: 0; font-weight: 500; font-size: 1.1rem; display: flex; justify-content: space-between; cursor: help;">
+                    <span>5-Year Forecast: Cashflow vs Fully Loaded Operating Costs ⓘ</span>
                     <span id="kpi-revenue" style="color: var(--accent);">-- / yr</span>
                 </h3>
                 <div class="chart-container">
@@ -1115,17 +1132,24 @@
 
                 <h3>Algorithmic Logic & Estimation Protocol</h3>
                 <p>To reduce initial data-entry friction, omitted fields leverage standardized predictive algorithms
-                    based on higher ed heuristics:</p>
+                    based on higher ed heuristics. The system generates the dynamic 5-year trendline from your Year 1
+                    snapshot data using the following specific rules:</p>
                 <ul>
-                    <li><strong>Compounding Attrition:</strong> The 5-year projection is not static. A dynamic drop-out
-                        rate (calculated as <code>100 - Retention%</code>) is explicitly subtracted year-over-year,
-                        alongside a standard graduation cohort exit, to accurately model future tuition bases over a
+                    <li><strong>Compounding Attrition:</strong> The 5-year projection is not a flat line. A dynamic
+                        drop-out
+                        rate (calculated as <code>100 - Retention%</code>) is explicitly subtracted year-over-year from
+                        your enrolled base.
+                        Alongside a standard graduation cohort exit formula (25% UG and 50% Grad transition out
+                        annually), new intake is modeled with a default <strong>2% enrollment growth</strong> basis.
+                    </li>
+                    <li><strong>Inflationary Multipliers:</strong> The automated projection applies a <strong>3%
+                            compounding inflationary rate</strong> to both tuition yield and salary
+                        expenditures to simulate realistic fiscal drag, merit increases, and market conditions over the
                         60-month horizon.</li>
-                    <li><strong>Inflationary Multipliers:</strong> The automated projection applies a baseline 2%
-                        enrollment growth alongside a 3% compounding inflationary rate to both tuition yield and salary
-                        expenditures to simulate realistic fiscal drag and market conditions.</li>
-                    <li><strong>Heuristics:</strong> If personnel inputs are left blank, the system assumes an optimal
-                        1:20 Full-Time Faculty-to-Student ratio, and standard campus climate compliance baselines.</li>
+                    <li><strong>Heuristics for Missing Data:</strong> If personnel inputs are left blank, the system
+                        assumes an optimal
+                        1:20 Full-Time Faculty-to-Student ratio (with equivalent staff ratios) and standard campus
+                        climate compliance baselines.</li>
                 </ul>
             </div>
         </div>
@@ -1184,7 +1208,9 @@
             esg: document.getElementById('kpi-esg'),
             margin: document.getElementById('kpi-margin'),
             trend: document.getElementById('kpi-trend'),
-            revenue: document.getElementById('kpi-revenue')
+            revenue: document.getElementById('kpi-revenue'),
+            sfratio: document.getElementById('kpi-sfratio'),
+            tuitionDep: document.getElementById('kpi-tuition-dep')
         };
         const adviceListFin = document.getElementById('advice-list-fin');
         const adviceListEsg = document.getElementById('advice-list-esg');
@@ -1394,6 +1420,17 @@
 
             kpis.score.innerText = holisticScore;
             kpis.scoreLbl.innerText = `Blended Ratio (${Math.round(finW * 100)}/${Math.round(esgW * 100)})`;
+
+            // New Custom KPI Logic
+            let totalStudents = d.ugStudents + d.gradStudents;
+            let sfRatio = d.ftFaculty > 0 ? (totalStudents / d.ftFaculty).toFixed(1) : "N/A";
+            kpis.sfratio.innerText = sfRatio !== "N/A" ? sfRatio + " : 1" : "N/A";
+            kpis.sfratio.style.color = (sfRatio > 25 || sfRatio < 10) ? "var(--warning)" : "var(--success)";
+
+            let directTuition = (d.ugStudents * d.ugTuition) + (d.gradStudents * d.gradTuition);
+            let tuitionDep = proj[0].rev > 0 ? ((directTuition / proj[0].rev) * 100).toFixed(1) : 0;
+            kpis.tuitionDep.innerText = tuitionDep + "%";
+            kpis.tuitionDep.style.color = tuitionDep > 85 ? "var(--danger)" : (tuitionDep > 70 ? "var(--warning)" : "var(--success)");
 
             // Intelligent Finance Insights
             let intelFin = [];
